@@ -21,7 +21,7 @@ contract MetafactoryNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     string private baseURI;
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
-    string public notrevealed_nft = "00000000000000000000000000000000000";
+    string public notrevealed_nft = "0x0000000000000000000000LOOTMETADATA";
     uint256 mintingPrice = 0;
 
     constructor(

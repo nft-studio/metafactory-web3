@@ -10,6 +10,7 @@
         "test:price": "node tests/price.js",
         "test:buy": "node tests/buy.js",
         "test:reveal": "node tests/reveal.js",
+        "test:withdraw": "node tests/withdraw.js",
         "deploy:debug": "node deploy.js --debug=true",
         "deploy": "node deploy.js"
     },
