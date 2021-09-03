@@ -102,6 +102,7 @@ contract MetafactoryNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         _tokenIdCounter.increment();
         uint256 newTokenId = _tokenIdCounter.current();
         _mint(msg.sender, newTokenId);
+        _setTokenURI(newTokenId, notrevealed_nft);
         _tokenIdsMapping[newTokenId] = notrevealed_nft;
         return newTokenId;
     }
@@ -110,8 +111,10 @@ contract MetafactoryNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         public
         onlyOwner
     {
+        require(
+            keccak256(abi.encode(_tokenIdsMapping[_tokenId])) == keccak256(abi.encode(notrevealed_nft)),
+            "MetafactoryNFT: Token revealed yet");
         require(canMint(_tokenURI), "MetafactoryNFT: Can't mint token");
-        require(_tokenIdsMapping[_tokenId] == notrevealed_nft, "MetafactoryNFT: Token revealed yet");
         _setTokenURI(_tokenId, _tokenURI);
         _creatorsMapping[_tokenURI] = msg.sender;
         _tokenIdsMapping[_tokenId] = _tokenURI;
@@ -135,8 +138,9 @@ contract MetafactoryNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     }
 
     function withdrawEther() public onlyOwner {
-        require(address(this).balance > 0, 'MetafactoryNFT: Nothing to withdraw!');
-        msg.sender.transfer(address(this).balance);
+        uint256 balance = address(this).balance;
+        require(balance > 0, 'MetafactoryNFT: Nothing to withdraw!');
+        payable(msg.sender).transfer(balance);
     }
 
     function totalSupply() public view returns (uint256) {
