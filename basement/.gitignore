@@ -1,0 +1,17 @@
+sitemap.xml
+contents/*
+bmt/inc/db_backup/*
+!contents/thumbs/.THUMBS_WILL_GO_HERE
+!contents/.CONTENTS_WILL_GO_HERE
+!bmt/inc/db_backup/.BACKUPS_WILL_GO_HERE
+.htaccess
+bmt/inc/connect.php
+.env
+.vscode
+.env*
+bmt/datatypes
+!bmt/datatypes/base_datatype
+endpoints/*
+!endpoints/hello-world.php
+bmt/scripts/datatypes/bak/*
+!bmt/scripts/datatypes/bak/.DATATYPE_BAKS_HERE

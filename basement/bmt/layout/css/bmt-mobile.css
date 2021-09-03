@@ -1,0 +1,15 @@
+@media (max-width: 768px){
+	
+	/*HEADER*/
+	.bmt-sidebar{left:-250px;}
+	.bmt-page{padding-left: 13px;}
+	.bmt-page-header{padding-left: 55px; font-size: 12px;}
+	.bmt-menu-toggle{display: block;}
+	.bmt-header-button { width: 30px; height: 30px; font-size: 15px; margin-top: 16px; line-height: 30px; }
+	
+	/*LOGIN*/
+	.form-signin {width: 100%;}
+	
+	/*DATATABLE*/
+	.dataTables_filter{text-align: left;}
+}
