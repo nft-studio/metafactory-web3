@@ -14,11 +14,8 @@ async function deploy() {
             configs.contract.name !== undefined &&
             configs.contract.ticker !== undefined &&
             configs.contract.contractIPFS !== undefined &&
-            configs.burning_enabled !== undefined &&
-            configs.proxy_enabled !== undefined &&
             configs.provider !== undefined &&
-            configs.contract.baseURI !== undefined &&
-            configs.umi !== undefined
+            configs.contract.baseURI !== undefined
         ) {
 
             console.log('Removing existing build..')
@@ -29,16 +26,13 @@ async function deploy() {
                 output = { stdio: 'inherit' }
             }
 
-            let minter_mnemonic = configs.umi.mnemonic
-            if (configs.proxy_enabled) {
-                minter_mnemonic = configs.proxy_mnemonic
-            }
+            let minter_mnemonic = configs.proxy_mnemonic
 
             console.log('Deploying contract..')
             let out = child_process.execSync('sudo PROVIDER="' + configs.provider + '" MNEMONIC="' + minter_mnemonic + '" BASEURI="' + configs.contract.baseURI + '" DESCRIPTION="' + configs.contract.contractIPFS + '" TICKER="' + configs.contract.ticker + '" NAME="' + configs.contract.name + '" PROXY="' + configs.proxy_address + '" PROXY_ENABLED=' + configs.proxy_enabled + ' BURNING_ENABLED=' + configs.burning_enabled + ' OWNER="' + configs.owner_address + '" truffle deploy --network ' + configs.network + ' --reset', output)
 
             // Extracting address
-                if(out !== null){
+            if (out !== null) {
                 out = out.toString()
                 let head = out.split('CONTRACT ADDRESS IS*||*')
                 let foot = head[1].split('*||*')

@@ -22,7 +22,7 @@ contract MetafactoryNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
     string public notrevealed_nft = "00000000000000000000000000000000000";
-    uint256 mintingPrice = 50 finney;
+    uint256 mintingPrice = 0;
 
     constructor(
         address _openseaProxyAddress,
@@ -43,7 +43,6 @@ contract MetafactoryNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     }
 
     function _burn(uint256 _tokenId) internal override(ERC721, ERC721URIStorage) {
-        require(burningEnabled, "MetafactoryNFT: Burning is disabled");
         super._burn(_tokenId);
     }
 
@@ -102,7 +101,7 @@ contract MetafactoryNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         require(msg.value == mintingPrice, 'MetafactoryNFT: Amount should be exactly the minting cost');
         _tokenIdCounter.increment();
         uint256 newTokenId = _tokenIdCounter.current();
-        _mint(_to, newTokenId);
+        _mint(msg.sender, newTokenId);
         _tokenIdsMapping[newTokenId] = notrevealed_nft;
         return newTokenId;
     }
@@ -113,10 +112,10 @@ contract MetafactoryNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     {
         require(canMint(_tokenURI), "MetafactoryNFT: Can't mint token");
         require(_tokenIdsMapping[_tokenId] == notrevealed_nft, "MetafactoryNFT: Token revealed yet");
-        _setTokenURI(newTokenId, _tokenURI);
+        _setTokenURI(_tokenId, _tokenURI);
         _creatorsMapping[_tokenURI] = msg.sender;
         _tokenIdsMapping[_tokenId] = _tokenURI;
-        _tokenIdsToHashMapping[_tokenURI] = tokenId;
+        _tokenIdsToHashMapping[_tokenURI] = _tokenId;
     }
 
     function fixPrice(uint256 newPrice) public onlyOwner {
