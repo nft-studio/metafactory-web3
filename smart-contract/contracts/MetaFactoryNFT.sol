@@ -9,31 +9,35 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 /**
  * @title MetafactoryNFT
- * MetafactoryNFT - Base smart contract for UMi ERC-721 Standards
+ * MetafactoryNFT
  */
 contract MetafactoryNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     mapping(string => address) private _creatorsMapping;
     mapping(uint256 => string) private _tokenIdsMapping;
     mapping(string => uint256) private _tokenIdsToHashMapping;
+    mapping(uint256 => string) private _tokenIdsToCollectionMapping;
     address openseaProxyAddress;
-    address umiProxyAddress;
     string public contract_ipfs_json;
     string private baseURI;
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
-    string public notrevealed_nft = "0x0000000000000000000000LOOTMETADATA";
-    uint256 mintingPrice = 0;
+
+    struct collection {
+        uint256 mintingPrice;
+        uint256 hardCap;
+        uint256 minted;
+        string lootMetadata;
+    }
+    mapping(string => collection) public _collections;
 
     constructor(
         address _openseaProxyAddress,
         string memory _name,
         string memory _ticker,
         string memory _contract_ipfs,
-        address _umiProxyAddress,
         string memory _base_uri
     ) ERC721(_name, _ticker) {
         openseaProxyAddress = _openseaProxyAddress;
-        umiProxyAddress = _umiProxyAddress;
         contract_ipfs_json = _contract_ipfs;
         baseURI = _base_uri;
     }
@@ -93,17 +97,21 @@ contract MetafactoryNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         return true;
     }
 
-    function buyNFT()
+    function buyNFT(string memory _collection)
         public
         payable
         returns (uint256)
     {
-        require(msg.value == mintingPrice, 'MetafactoryNFT: Amount should be exactly the minting cost');
+        require(_collections[_collection].hardCap > 0, "MetafactoryNFT: Collection doesn't exists");
+        require(_collections[_collection].minted < _collections[_collection].hardCap, "MetafactoryNFT: Collection reached hard cap");
+        require(msg.value == _collections[_collection].mintingPrice, 'MetafactoryNFT: Amount should be exactly the minting cost');
         _tokenIdCounter.increment();
+        _collections[_collection].minted++;
         uint256 newTokenId = _tokenIdCounter.current();
         _mint(msg.sender, newTokenId);
-        _setTokenURI(newTokenId, notrevealed_nft);
-        _tokenIdsMapping[newTokenId] = notrevealed_nft;
+        _setTokenURI(newTokenId, _collections[_collection].lootMetadata);
+        _tokenIdsMapping[newTokenId] = _collections[_collection].lootMetadata;
+        _tokenIdsToCollectionMapping[newTokenId] = _collection;
         return newTokenId;
     }
 
@@ -111,8 +119,9 @@ contract MetafactoryNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         public
         onlyOwner
     {
+        string memory _collection = _tokenIdsToCollectionMapping[_tokenId];
         require(
-            keccak256(abi.encode(_tokenIdsMapping[_tokenId])) == keccak256(abi.encode(notrevealed_nft)),
+            keccak256(abi.encode(_tokenIdsMapping[_tokenId])) == keccak256(abi.encode(_collections[_collection].lootMetadata)),
             "MetafactoryNFT: Token revealed yet");
         require(canMint(_tokenURI), "MetafactoryNFT: Can't mint token");
         _setTokenURI(_tokenId, _tokenURI);
@@ -121,16 +130,21 @@ contract MetafactoryNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         _tokenIdsToHashMapping[_tokenURI] = _tokenId;
     }
 
-    function fixPrice(uint256 newPrice) public onlyOwner {
-        mintingPrice = newPrice;
+    function setupCollection(string memory _collection, uint256 _price, uint256 _hardCap, string memory _lootMetadata) public onlyOwner {
+        // Can't edit hard cap if minting is done, this won't be fair for users.
+        if(_collections[_collection].minted == 0) {
+            _collections[_collection].hardCap = _hardCap;
+        }
+        _collections[_collection].lootMetadata = _lootMetadata;
+        _collections[_collection].mintingPrice = _price;
+    }
+
+    function returnCollection(string memory _collection) public returns (collection memory){
+        return _collections[_collection];
     }
 
     function fixContractDescription(string memory newDescription) public onlyOwner {
         contract_ipfs_json = newDescription;
-    }
-
-    function fixLootboxMetadata(string memory newMetadata) public onlyOwner {
-        notrevealed_nft = newMetadata;
     }
 
     function getBalance() public view returns (uint256) {

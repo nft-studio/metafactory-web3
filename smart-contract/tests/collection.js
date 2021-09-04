@@ -31,10 +31,12 @@ async function main() {
 
         try {
             console.log('Trying minting NFT...')
-            const result = await nftContract.methods
-                .fixPrice("1000000000000000000")
+            await nftContract.methods
+                .setupCollection("COLLECTION_ZERO", "1000000000000000000", 5, "0xLOOOOOOOOOOOOOOOOOOOOOOOOOOOOTMETADATA")
                 .send({ from: configs.owner_address });
-            console.log("Price fixed! Transaction: " + result.transactionHash);
+            const result = await nftContract.methods
+                .returnCollection("COLLECTION_ZERO").call();
+            console.log("Collection setupped!", result);
             console.log(result)
         } catch (e) {
             console.log(e)

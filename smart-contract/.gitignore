@@ -6,6 +6,9 @@ node_modules/
 .nvmrc
 eth/deploy.sh
 yarn-error.log
-deployed/
+deployed/polygon/*
+deployed/ethereum/*
+deployed/ganache/*
 .DS_Store
 abi.json
+!deployed/ganache/example.json

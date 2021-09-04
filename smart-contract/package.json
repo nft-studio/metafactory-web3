@@ -7,7 +7,7 @@
         "extract-abi": "truffle-export-abi -d ./build/contracts/ -o ./abi.json -v",
         "test": "truffle test",
         "test:details": "node tests/test.js",
-        "test:price": "node tests/price.js",
+        "test:collection": "node tests/collection.js",
         "test:buy": "node tests/buy.js",
         "test:reveal": "node tests/reveal.js",
         "test:withdraw": "node tests/withdraw.js",

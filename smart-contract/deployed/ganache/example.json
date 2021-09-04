@@ -1,0 +1,15 @@
+{
+    "network": "ganache",
+    "contract_address": "",
+    "owner_address": "",
+    "owner_mnemonic": "",
+    "contract": {
+        "name": "MetafactoryNFT",
+        "ticker": "META",
+        "contractIPFS": "-",
+        "baseURI": "https://ipfs.io/ipfs/"
+    },
+    "proxy_mnemonic": "",
+    "proxy_address": "",
+    "provider": "http://localhost:7545"
+}

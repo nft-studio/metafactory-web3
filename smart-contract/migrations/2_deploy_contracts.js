@@ -15,14 +15,13 @@ module.exports = async(deployer, network) => {
         proxyRegistryAddress = "0x0000000000000000000000000000000000000000";
     }
 
-    const umiProxyAddress = process.env.PROXY;
     const realOwnerAddress = process.env.OWNER;
     const contractName = process.env.NAME;
     const contractTicker = process.env.TICKER;
     const contractDescription = process.env.DESCRIPTION;
     const baseURI = process.env.BASEURI;
 
-    await deployer.deploy(MetafactoryNFT, proxyRegistryAddress, contractName, contractTicker, contractDescription, umiProxyAddress, baseURI, { gas: 5000000 });
+    await deployer.deploy(MetafactoryNFT, proxyRegistryAddress, contractName, contractTicker, contractDescription, baseURI, { gas: 5000000 });
     const contract = await MetafactoryNFT.deployed();
     console.log('CONTRACT ADDRESS IS*||*' + contract.address + '*||*')
     await contract.transferOwnership(realOwnerAddress);

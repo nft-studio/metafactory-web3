@@ -32,7 +32,7 @@ async function main() {
         try {
             console.log('Trying buy NFT...')
             const result = await nftContract.methods
-                .buyNFT()
+                .buyNFT("COLLECTION_ZERO")
                 .send({ value: "1000000000000000000", from: configs.owner_address });
             console.log("NFT bought! Transaction: " + result.transactionHash);
             console.log(result)
