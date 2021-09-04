@@ -37,7 +37,7 @@ async function main() {
             console.log("NFT revealed! Transaction: " + result.transactionHash);
             console.log(result)
         } catch (e) {
-            console.log(e)
+            console.log(e.message)
         }
     } else {
         console.log('Please provide `owner_mnemonic` first.')

@@ -39,7 +39,7 @@ async function main() {
             console.log("Collection setupped!", result);
             console.log(result)
         } catch (e) {
-            console.log(e)
+            console.log(e.message)
         }
     } else {
         console.log('Please provide `owner_mnemonic` first.')

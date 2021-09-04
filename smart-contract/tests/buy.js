@@ -33,11 +33,11 @@ async function main() {
             console.log('Trying buy NFT...')
             const result = await nftContract.methods
                 .buyNFT("COLLECTION_ZERO")
-                .send({ value: "1000000000000000000", from: configs.owner_address });
+                .send({ value: "1000000000000000000", from: configs.proxy_address });
             console.log("NFT bought! Transaction: " + result.transactionHash);
             console.log(result)
         } catch (e) {
-            console.log(e)
+            console.log(e.message)
         }
     } else {
         console.log('Please provide `owner_mnemonic` first.')
